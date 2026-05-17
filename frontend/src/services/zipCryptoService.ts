@@ -11,6 +11,8 @@ export interface ZipVault {
   vaultId: string;
   createdAt: string;
   proofsGenerated: number;
+  lastConfidenceScore?: number;
+  lastRiskLevel?: "low" | "medium" | "high";
 }
 
 /**
@@ -56,7 +58,12 @@ export function getZipVault(): ZipVault | null {
  * In production, this compiles the Compact contract and invokes the
  * Midnight Compact Runtime to output an indexable ledger state transaction.
  */
-export async function generateZKProof(vault: ZipVault, disclosure: 'minimal' | 'custom' = 'minimal'): Promise<HumanProof> {
+export async function generateZKProof(
+  vault: ZipVault, 
+  disclosure: 'minimal' | 'custom' = 'minimal',
+  confidenceScore?: number,
+  riskLevel?: "low" | "medium" | "high"
+): Promise<HumanProof> {
   // Simulate the cryptographic latency to maintain an immersive experience
   // (e.g., circuit witness generation, proof synthesis)
   await new Promise((resolve) => setTimeout(resolve, 2500));
@@ -64,7 +71,12 @@ export async function generateZKProof(vault: ZipVault, disclosure: 'minimal' | '
   const randomSuffix = Math.floor(10000 + Math.random() * 90000);
   
   // Update vault stat
-  const updatedVault = { ...vault, proofsGenerated: vault.proofsGenerated + 1 };
+  const updatedVault: ZipVault = { 
+    ...vault, 
+    proofsGenerated: vault.proofsGenerated + 1,
+    lastConfidenceScore: confidenceScore !== undefined ? confidenceScore : vault.lastConfidenceScore,
+    lastRiskLevel: riskLevel !== undefined ? riskLevel : vault.lastRiskLevel
+  };
   localStorage.setItem('zip_vault', JSON.stringify(updatedVault));
 
   return {

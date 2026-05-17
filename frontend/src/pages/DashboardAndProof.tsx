@@ -114,22 +114,42 @@ export function Dashboard() {
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" className="text-zip-slate-800" strokeWidth="8" />
                   <motion.circle 
-                    cx="50" cy="50" r="45" fill="none" stroke="currentColor" className="text-zip-cyan" strokeWidth="8"
+                    cx="50" cy="50" r="45" fill="none" stroke="currentColor" className={vault.proofsGenerated > 0 ? "text-zip-cyan" : "text-zip-slate-600"} strokeWidth="8"
                     strokeDasharray="283"
                     initial={{ strokeDashoffset: 283 }}
-                    animate={{ strokeDashoffset: 283 - (283 * 0.94) }}
-                    transition={{ duration: 1.5, ease: "easeOut" }}
+                    animate={{ 
+                      strokeDashoffset: vault.proofsGenerated > 0 ? (283 - (283 * ((vault.lastConfidenceScore ?? 94) / 100))) : 283,
+                      rotate: vault.proofsGenerated > 0 ? 0 : [0, 360]
+                    }}
+                    transition={vault.proofsGenerated > 0 
+                      ? { duration: 1.5, ease: "easeOut" }
+                      : { duration: 8, repeat: Infinity, ease: "linear" }
+                    }
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center flex-col">
-                  <span className="text-xl font-bold text-white">94<span className="text-xs text-slate-400">%</span></span>
+                  {vault.proofsGenerated > 0 ? (
+                    <span className="text-xl font-bold text-white">{vault.lastConfidenceScore ?? 94}<span className="text-xs text-slate-400">%</span></span>
+                  ) : (
+                    <span className="text-xl font-bold text-slate-500">--<span className="text-xs text-slate-600">%</span></span>
+                  )}
                 </div>
               </div>
               
               <div className="space-y-3 w-full">
                 <div className="flex justify-between items-center w-full">
                   <span className="text-xs font-mono text-slate-500 uppercase">Assessment:</span>
-                  <span className="text-xs font-bold text-zip-emerald tracking-wider uppercase bg-zip-emerald/10 px-2 py-0.5 rounded border border-zip-emerald/20">Low Risk</span>
+                  {vault.proofsGenerated > 0 ? (
+                    <span className={`text-xs font-bold tracking-wider uppercase px-2 py-0.5 rounded border ${
+                      vault.lastRiskLevel === 'high' ? 'text-red-500 bg-red-500/10 border-red-500/20' :
+                      vault.lastRiskLevel === 'medium' ? 'text-yellow-500 bg-yellow-500/10 border-yellow-500/20' :
+                      'text-zip-emerald bg-zip-emerald/10 border-zip-emerald/20'
+                    }`}>
+                      {vault.lastRiskLevel ? `${vault.lastRiskLevel} Risk` : 'Low Risk'}
+                    </span>
+                  ) : (
+                    <span className="text-xs font-bold text-slate-400 tracking-wider uppercase bg-zip-slate-800/50 px-2 py-0.5 rounded border border-zip-slate-700">Calibrating</span>
+                  )}
                 </div>
                 <div className="bg-zip-slate-900/80 p-3 rounded border border-zip-slate-800 relative overflow-hidden h-16 flex items-center">
                   <AnimatePresence mode="wait">
@@ -138,9 +158,9 @@ export function Dashboard() {
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -5 }}
-                      className="text-xs text-zip-cyan font-mono leading-tight"
+                      className={`text-xs font-mono leading-tight ${vault.proofsGenerated > 0 ? "text-zip-cyan" : "text-slate-500"}`}
                     >
-                      {threatStatuses[threatState]}
+                      {vault.proofsGenerated > 0 ? threatStatuses[threatState] : ["Awaiting behavioral input", "Establishing baseline entropy", "Ready for proof generation", "Monitoring environment"][threatState]}
                     </motion.p>
                   </AnimatePresence>
                   {/* Subtle scanning line */}
@@ -172,6 +192,7 @@ export function GenerateProof() {
   const [logs, setLogs] = useState<string[]>([]);
   const [proofData, setProofData] = useState<any>(null);
   const [copied, setCopied] = useState(false);
+  const [includeAge, setIncludeAge] = useState(false);
   const navigate = useNavigate();
   const logsEndRef = useRef<HTMLDivElement>(null);
 
@@ -234,7 +255,12 @@ export function GenerateProof() {
     await addLog('[ZIP] zero-knowledge proof synthesis complete.', 500);
 
     const { generateZKProof } = await import('../services/zipCryptoService');
-    const proof = await generateZKProof(vault!);
+    const proof = await generateZKProof(
+      vault!, 
+      includeAge ? 'custom' : 'minimal', 
+      analysisResult.humanConfidence, 
+      analysisResult.riskLevel
+    );
     setProofData(proof);
     
     setTimeout(() => setStep('success'), 1200);
@@ -277,13 +303,20 @@ export function GenerateProof() {
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between p-4 rounded-lg bg-zip-slate-900/50 border border-zip-slate-800 opacity-50 cursor-not-allowed">
+                <div 
+                  className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-all ${
+                    includeAge 
+                      ? 'bg-zip-slate-800/50 border border-zip-cyan/30' 
+                      : 'bg-zip-slate-900/50 border border-zip-slate-800'
+                  }`}
+                  onClick={() => setIncludeAge(!includeAge)}
+                >
                   <div>
                     <p className="font-medium text-white">Age &gt; 18</p>
                     <p className="text-xs text-slate-400">Proves age requirement</p>
                   </div>
-                  <div className="w-10 h-6 bg-zip-slate-700 rounded-full relative">
-                    <div className="w-4 h-4 bg-slate-500 rounded-full absolute left-1 top-1" />
+                  <div className={`w-10 h-6 rounded-full relative transition-colors ${includeAge ? 'bg-zip-cyan shadow-[0_0_10px_rgba(34,211,238,0.5)]' : 'bg-zip-slate-700'}`}>
+                    <div className={`w-4 h-4 rounded-full absolute top-1 transition-all shadow-sm ${includeAge ? 'bg-white right-1' : 'bg-slate-500 left-1'}`} />
                   </div>
                 </div>
               </div>
