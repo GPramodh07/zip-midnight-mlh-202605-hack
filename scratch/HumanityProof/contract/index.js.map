@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "../../../",
+  "sources": ["scratch/HumanityProof.compact"],
+  "names": [],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EAAA;;;;;;;;;;MAsBA,AAAA,aAIC;;;;;cAJ4B,oBAA6B;cAAE,WAAmB;;;;;;;;;;;;;;;;;;;;;;;;;yCAAlD,oBAA6B,+BAAE,WAAmB;;;;;;;;;+CAAlD,oBAA6B;+CAAE,WAAmB;;;OAI9E;MAED,AAAA,WAGC;;;;;cAH0B,oBAA6B;;;;;;;;;;;;;;;;;;yCAA7B,oBAA6B;;;;;;;;;6CAA7B,oBAA6B;;;OAGvD;MAED,AAAA,gBAGC;;;;;cAH+B,oBAA6B;cAAE,OAAsB;;;;;;;;;;;;;;;;;;;;;;;;;yCAArD,oBAA6B,+BAAE,OAAsB;;;;;;;;;kDAArD,oBAA6B;kDAAE,OAAsB;;;OAGpF;;;;;;;;;;;;GACA;EArCD;;;;;;;;;;;;;;;;;;;;;;;;;;;;;IAmBA;;;;;;;;;;yEAAyD;IACzD;;;;;;;;;;yEAAmD;;;;;;;GAiBlD;EAfD,AAAA,gBAIC,4BAJ4B,oBAA6B,EAAE,WAAmB;;qDACnE;;;;;;;;;;;4KAAmC,oBAAkB;;;;0HAAnC;;IAC1B;;;;;;;;;;2HAAmC,oBAAkB;;;;;;wEAAnC;IAClB;;;;;;;;;;2HAA2B,oBAAkB;;;2HAAY,WAAS;;;wEAAxD;;GACb;EAED,AAAA,cAGC,4BAH0B,oBAA6B;oDAC7C;;;;;;;;;;;2KAAmC,oBAAkB;;;;yHAAnC;;IACzB;;;;;;;;;;2HAAmC,oBAAkB;;;;;;wEAAnC;;GACrB;EAED,AAAA,mBAGC,4BAH+B,oBAA6B,EAAE,OAAsB;;oDAC1E;;;;;;;;;;;2KAAmC,oBAAkB;;;;yHAAnC;;;uCACgB;;;;;;;;;;;;;;kIAAmC,oBAAkB;;;4GAAnC;oBAAuD,OAAK;GAC1H;;;;;;;;;;;;;;;;IAjBD;;;;;uCAAA;;;;;;;;;;;;;;;;4GAAyD;;;;;;uCAAzD;;;;;;;;;;;;4GAAyD;;;;;;;;;;;;;;uCAAzD;;;;;;;;;;;;;;;4GAAyD;;;;;;;;;;;;;;uCAAzD;;;;;;;;;;;;;;;;;4GAAyD;;;;;;;;;KAAA;IACzD;;;;;uCAAA;;;;;;;;;;;;;;;;4GAAmD;;;;;;uCAAnD;;;;;;;;;;;;4GAAmD;;;;;;;;;;;;;;uCAAnD;;;;;;;;;;;;;;;4GAAmD;;;;;;;;;;;;;;uCAAnD;;;;;;;;;;;;;;;;;4GAAmD;;;;;;;;;KAAA;;;;;;;;;;"
+}

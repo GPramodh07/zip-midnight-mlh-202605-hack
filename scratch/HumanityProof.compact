@@ -1,0 +1,37 @@
+pragma language_version >= 0.23;
+
+import CompactStandardLibrary;
+
+export enum DisclosureLevel {
+    Minimal,
+    Restricted
+}
+
+export enum Status {
+    Unverified,
+    Verified
+}
+
+export struct DisclosureResult {
+    verifiedHuman: Status,
+    level: DisclosureLevel
+}
+
+export ledger verificationStatus: Map<Bytes<32>, Status>;
+export ledger timestamps: Map<Bytes<32>, Uint<64>>;
+
+export circuit registerProof(identityCommitment: Bytes<32>, timestamp: Uint<64>): [] {
+    assert(!verificationStatus.member(disclose(identityCommitment)), "Proof already registered");
+    verificationStatus.insert(disclose(identityCommitment), Status.Unverified);
+    timestamps.insert(disclose(identityCommitment), disclose(timestamp));
+}
+
+export circuit verifyHuman(identityCommitment: Bytes<32>): [] {
+    assert(verificationStatus.member(disclose(identityCommitment)), "Proof not found");
+    verificationStatus.insert(disclose(identityCommitment), Status.Verified);
+}
+
+export circuit discloseHumanity(identityCommitment: Bytes<32>, level: DisclosureLevel): DisclosureResult {
+    assert(verificationStatus.member(disclose(identityCommitment)), "Proof not found");
+    return DisclosureResult { verifiedHuman: verificationStatus.lookup(disclose(identityCommitment)), level: disclose(level) };
+}

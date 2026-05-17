@@ -1,0 +1,143 @@
+{
+  "compiler-version": "0.31.0",
+  "language-version": "0.23.0",
+  "runtime-version": "0.16.0",
+  "circuits": [
+    {
+      "name": "registerProof",
+      "pure": false,
+      "proof": true,
+      "arguments": [
+        {
+          "name": "identityCommitment",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        },
+        {
+          "name": "timestamp",
+          "type": {
+            "type-name": "Uint",
+            "maxval": 18446744073709551615
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Tuple",
+        "types": [
+        ]
+      }
+    },
+    {
+      "name": "verifyHuman",
+      "pure": false,
+      "proof": true,
+      "arguments": [
+        {
+          "name": "identityCommitment",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Tuple",
+        "types": [
+        ]
+      }
+    },
+    {
+      "name": "discloseHumanity",
+      "pure": false,
+      "proof": true,
+      "arguments": [
+        {
+          "name": "identityCommitment",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        },
+        {
+          "name": "level",
+          "type": {
+            "type-name": "Enum",
+            "name": "DisclosureLevel",
+            "elements": [
+              "Minimal",
+              "Restricted"
+            ]
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Struct",
+        "name": "DisclosureResult",
+        "elements": [
+          {
+            "name": "verifiedHuman",
+            "type": {
+              "type-name": "Enum",
+              "name": "Status",
+              "elements": [
+                "Unverified",
+                "Verified"
+              ]
+            }
+          },
+          {
+            "name": "level",
+            "type": {
+              "type-name": "Enum",
+              "name": "DisclosureLevel",
+              "elements": [
+                "Minimal",
+                "Restricted"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "witnesses": [
+  ],
+  "contracts": [
+  ],
+  "ledger": [
+    {
+      "name": "verificationStatus",
+      "index": 0,
+      "exported": true,
+      "storage": "Map",
+      "key": {
+        "type-name": "Bytes",
+        "length": 32
+      },
+      "value": {
+        "type-name": "Enum",
+        "name": "Status",
+        "elements": [
+          "Unverified",
+          "Verified"
+        ]
+      }
+    },
+    {
+      "name": "timestamps",
+      "index": 1,
+      "exported": true,
+      "storage": "Map",
+      "key": {
+        "type-name": "Bytes",
+        "length": 32
+      },
+      "value": {
+        "type-name": "Uint",
+        "maxval": 18446744073709551615
+      }
+    }
+  ]
+}

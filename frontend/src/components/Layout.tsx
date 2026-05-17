@@ -1,4 +1,4 @@
-
+import { useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Shield, Fingerprint } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -6,6 +6,11 @@ import { motion } from 'framer-motion';
 export function Layout() {
   const location = useLocation();
   const isNova = location.pathname.includes('nova-social');
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   // If we are in the fake Nova Social app, render a different header
   if (isNova) {
@@ -38,7 +43,7 @@ export function Layout() {
 
   // ZIP Default Layout
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden">
+    <div className="min-h-screen flex flex-col relative overflow-x-hidden">
       {/* Background glow effects */}
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-zip-indigo/20 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-zip-cyan/10 blur-[120px] rounded-full pointer-events-none" />

@@ -1,0 +1,52 @@
+pragma language_version >= 0.23;
+
+import CompactStandardLibrary;
+
+export enum DisclosureLevel {
+    Minimal,
+    Restricted
+}
+
+export enum ProofState {
+    Unverified,
+    Verified
+}
+
+export struct DisclosureResult {
+    verifiedHuman: ProofState,
+    level: DisclosureLevel
+}
+
+// Ledger mapping a privacy-preserving commitment to its verification status
+export ledger humanProofs: Map<Bytes<32>, ProofState>;
+
+// Ledger recording the issuance timestamp for transparency
+export ledger proofTimestamps: Map<Bytes<32>, Uint<64>>;
+
+export circuit registerProof(identityCommitment: Bytes<32>, timestamp: Uint<64>): [] {
+    // Prevent duplicate proof registration without revealing the root identity
+    assert(!humanProofs.member(disclose(identityCommitment)), "Proof already registered");
+    
+    // Register as unverified initially, and commit the timestamp
+    humanProofs.insert(disclose(identityCommitment), ProofState.Unverified);
+    proofTimestamps.insert(disclose(identityCommitment), disclose(timestamp));
+}
+
+export circuit verifyHuman(identityCommitment: Bytes<32>): [] {
+    // Assert the proof exists
+    assert(humanProofs.member(disclose(identityCommitment)), "Proof not found");
+    
+    // Mark as verified
+    humanProofs.insert(disclose(identityCommitment), ProofState.Verified);
+}
+
+export circuit discloseHumanity(identityCommitment: Bytes<32>, level: DisclosureLevel): DisclosureResult {
+    // Ensure the proof is registered
+    assert(humanProofs.member(disclose(identityCommitment)), "Proof not found");
+    
+    // Lookup the state from the ledger and return a disclosure result
+    return DisclosureResult { 
+        verifiedHuman: humanProofs.lookup(disclose(identityCommitment)), 
+        level: disclose(level) 
+    };
+}
